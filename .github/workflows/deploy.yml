@@ -32,14 +32,20 @@ jobs:
         run: |
           npm install
           npm run build
-          if [ -f dist/index.html ]; then
-            cp dist/index.html dist/404.html
+
+          # تشخیص خودکار پوشه خروجی و ساخت 404.html برای مسیریابی Client-side
+          if [ -d "dist" ]; then
+            echo "BUILD_DIR=dist" >> $GITHUB_ENV
+            cp dist/index.html dist/404.html || true
+          elif [ -d ".output/public" ]; then
+            echo "BUILD_DIR=.output/public" >> $GITHUB_ENV
+            cp .output/public/index.html .output/public/404.html || true
           fi
 
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: ${{ env.BUILD_DIR }}
 
       - name: Deploy to GitHub Pages
         id: deployment
