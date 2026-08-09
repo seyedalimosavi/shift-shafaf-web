@@ -3,7 +3,7 @@ import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
   tanstackStart: {
-    spa: true, // فعال‌سازی حالت SPA برای هاست‌های استاتیک مثل GitHub Pages
+    spa: {}, // تغییر true به یک شیء خالی {} جهت برطرف شدن ارور Zod
   },
   vite: {
     base: "/shift-shafaf-web/",
