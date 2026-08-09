@@ -3,7 +3,8 @@ import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
   tanstackStart: {
-    spa: {}, // تغییر true به یک شیء خالی {} جهت برطرف شدن ارور Zod
+    // بازگرداندن entry سرور برای ساخت درست فایل‌های TanStack Start
+    server: { entry: "server" },
   },
   vite: {
     base: "/shift-shafaf-web/",
