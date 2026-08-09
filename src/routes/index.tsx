@@ -1,24 +1,48 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { CalendarClock } from "lucide-react";
+import { loadSettings } from "@/lib/settings";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "شیفت‌کار — تقویم شیفت شمسی" },
+      {
+        name: "description",
+        content:
+          "شیفت‌کار: تقویم شمسی شیفت با چرخهٔ ۸ روزه، گروه‌های الف تا د، یادداشت روزانه و کارکرد آفلاین.",
+      },
+      { property: "og:title", content: "شیفت‌کار — تقویم شیفت شمسی" },
+      {
+        property: "og:description",
+        content: "تقویم شیفت شمسی با چرخهٔ ۸ روزه، یادداشت روزانه و کارکرد کامل آفلاین.",
+      },
+    ],
+  }),
+  component: SplashPage,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function SplashPage() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const settings = loadSettings();
+    const target = settings.onboardingCompleted
+      ? ((settings.lastRoute || "/calendar") as "/calendar")
+      : ("/onboarding" as const);
+    const timer = window.setTimeout(() => {
+      void navigate({ to: target, replace: true });
+    }, 900);
+    return () => window.clearTimeout(timer);
+  }, [navigate]);
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="hero-gradient flex min-h-screen flex-col items-center justify-center gap-4 text-primary-foreground">
+      <span className="flex h-24 w-24 animate-pulse items-center justify-center rounded-3xl bg-card/20">
+        <CalendarClock className="h-12 w-12" aria-hidden />
+      </span>
+      <h1 className="text-3xl font-extrabold">شیفت‌کار</h1>
+      <p className="text-sm opacity-90">تقویم شیفت شمسی</p>
     </div>
   );
 }
