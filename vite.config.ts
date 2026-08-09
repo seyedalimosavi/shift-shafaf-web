@@ -8,13 +8,13 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
-  base: "/shift-shafaf-web/",
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
     server: { entry: "server" },
   },
   vite: {
+    base: "/shift-shafaf-web/", // انتقال base به داخل تنظیمات vite
     plugins: [
       VitePWA({
         strategies: "generateSW",
@@ -25,7 +25,7 @@ export default defineConfig({
         manifest: false,
         workbox: {
           globPatterns: ["**/*.{js,css,html,svg,png,ico,woff2}"],
-          navigateFallback: "/",
+          navigateFallback: "/shift-shafaf-web/", // اصلاح مسیر fallback برای PWA
           navigateFallbackDenylist: [/^\/~oauth/, /^\/api\//],
           runtimeCaching: [
             {
