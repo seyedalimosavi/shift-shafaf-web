@@ -28,8 +28,8 @@ jobs:
           node-version: 20
       - name: Install & Build
         run: |
-          npm i
-          npm run dev
+          npm install
+          npx tsc
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
