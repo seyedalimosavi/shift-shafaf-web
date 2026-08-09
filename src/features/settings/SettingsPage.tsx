@@ -9,10 +9,75 @@ import { THEMES } from "@/lib/themes";
 import { formatJalaliLong, todayJalali } from "@/lib/jalali";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { Info, LifeBuoy, Mail, Moon, RefreshCcw, Sun } from "lucide-react";
+import type { ThemeMode } from "@/lib/themes";
+import {
+  Info,
+  LifeBuoy,
+  Mail,
+  Megaphone,
+  MessageCircle,
+  Monitor,
+  Moon,
+  Phone,
+  RefreshCcw,
+  Send,
+  Sun,
+  Users,
+} from "lucide-react";
 import { ShiftBadge } from "@/components/ShiftBadge";
 
 type DialogKind = "help" | "about" | "contact" | null;
+
+const MODE_OPTIONS: { id: ThemeMode; label: string; icon: typeof Sun }[] = [
+  { id: "light", label: "روشن", icon: Sun },
+  { id: "dark", label: "تیره", icon: Moon },
+  { id: "system", label: "سیستم", icon: Monitor },
+];
+
+interface ContactItem {
+  icon: typeof Sun;
+  label: string;
+  value: string;
+  href: string;
+  dir?: "ltr" | "rtl";
+}
+
+/** ارتباط با ما — نشانی‌های نمونه؛ در صورت نیاز مقادیر واقعی را جایگزین کنید. */
+const CONTACT_ITEMS: ContactItem[] = [
+  {
+    icon: Phone,
+    label: "شماره تماس",
+    value: "۰۹۱۲۰۰۰۰۰۰۰",
+    href: "tel:+989120000000",
+    dir: "ltr",
+  },
+  {
+    icon: Users,
+    label: "گروه واتساپ",
+    value: "عضویت در گروه",
+    href: "https://chat.whatsapp.com/",
+  },
+  {
+    icon: MessageCircle,
+    label: "واتساپ شخصی",
+    value: "گفتگوی مستقیم",
+    href: "https://wa.me/989120000000",
+  },
+  {
+    icon: Megaphone,
+    label: "کانال ایتا",
+    value: "@shiftkar",
+    href: "https://eitaa.com/shiftkar",
+    dir: "ltr",
+  },
+  {
+    icon: Send,
+    label: "تلگرام شخصی",
+    value: "@shiftkar",
+    href: "https://t.me/shiftkar",
+    dir: "ltr",
+  },
+];
 
 export function SettingsPage() {
   const { settings, set } = useSettings();
@@ -27,9 +92,9 @@ export function SettingsPage() {
 
       <div className="space-y-4 px-4 py-4">
         <section className="rounded-2xl border border-border bg-card p-4 elevated">
-          <h2 className="text-sm font-bold">گروه کاری من</h2>
+          <h2 className="text-sm font-bold">شیفت کاری من</h2>
           <p className="mt-1 text-xs text-muted-foreground">
-            انتخاب گروه، فیلتر تقویم را نیز به همان گروه تغییر می‌دهد.
+            انتخاب شیفت، فیلتر تقویم را نیز به همان شیفت تغییر می‌دهد.
           </p>
           <div className="mt-3 grid grid-cols-4 gap-2">
             {GROUPS.map((g: Group) => (
@@ -38,7 +103,7 @@ export function SettingsPage() {
                 type="button"
                 onClick={() => {
                   set({ userGroup: g, filterGroup: g });
-                  toast.success(`گروه کاری روی «${GROUP_LABELS[g]}» تنظیم شد.`);
+                  toast.success(`شیفت کاری روی «${GROUP_LABELS[g]}» تنظیم شد.`);
                 }}
                 className={cn(
                   "rounded-xl border px-2 py-3 text-sm font-bold transition-colors",
@@ -79,21 +144,38 @@ export function SettingsPage() {
         </section>
 
         <section className="rounded-2xl border border-border bg-card p-4 elevated">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold">پوستهٔ رنگی</h2>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => set({ mode: settings.mode === "dark" ? "light" : "dark" })}
-            >
-              {settings.mode === "dark" ? (
-                <Sun className="h-4 w-4" aria-hidden />
-              ) : (
-                <Moon className="h-4 w-4" aria-hidden />
-              )}
-              {settings.mode === "dark" ? "حالت روشن" : "حالت تیره"}
-            </Button>
+          <h2 className="text-sm font-bold">حالت نمایش</h2>
+          <div className="mt-3 grid grid-cols-3 gap-2">
+            {MODE_OPTIONS.map((m) => {
+              const Icon = m.icon;
+              return (
+                <button
+                  key={m.id}
+                  type="button"
+                  onClick={() => set({ mode: m.id })}
+                  aria-pressed={settings.mode === m.id}
+                  className={cn(
+                    "flex flex-col items-center gap-1 rounded-xl border px-2 py-3 text-xs font-bold transition-colors",
+                    settings.mode === m.id
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : "border-border bg-card hover:bg-accent",
+                  )}
+                >
+                  <Icon className="h-4 w-4" aria-hidden />
+                  {m.label}
+                </button>
+              );
+            })}
           </div>
+          {settings.mode === "system" ? (
+            <p className="mt-2 text-xs text-muted-foreground">
+              حالت روشن یا تیره به‌صورت خودکار از تنظیمات دستگاه شما پیروی می‌کند.
+            </p>
+          ) : null}
+        </section>
+
+        <section className="rounded-2xl border border-border bg-card p-4 elevated">
+          <h2 className="text-sm font-bold">پوستهٔ رنگی</h2>
 
           <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
             {THEMES.map((t) => (
@@ -184,10 +266,10 @@ export function SettingsPage() {
           </DialogHeader>
           {dialog === "help" ? (
             <div className="space-y-2 text-sm text-muted-foreground">
-              <p>• چرخهٔ شیفت ۸ روزه است: صبح ۱، صبح ۲، شب ۱، شب ۲ و چهار روز استراحت.</p>
+              <p>• چرخهٔ شیفت ۸ روزه است: روزکار ۱، روزکار ۲، شب‌کار ۱، شب‌کار ۲ و چهار روز استراحت.</p>
               <p>• با کشیدن افقی روی تقویم، ماه بعد یا قبل نمایش داده می‌شود.</p>
               <p>• با لمس هر روز، جزئیات روز و یادداشت آن باز می‌شود.</p>
-              <p>• فیلتر گروه، شیفت همان گروه را روی تقویم نشان می‌دهد.</p>
+              <p>• فیلتر شیفت، وضعیت همان شیفت را روی تقویم نشان می‌دهد.</p>
             </div>
           ) : null}
           {dialog === "about" ? (
@@ -200,11 +282,38 @@ export function SettingsPage() {
             </div>
           ) : null}
           {dialog === "contact" ? (
-            <div className="space-y-2 text-sm text-muted-foreground">
-              <p>برای ارسال بازخورد یا گزارش خطا با ما در تماس باشید:</p>
-              <a className="block font-bold text-primary" href="mailto:support@shiftkar.app" dir="ltr">
-                support@shiftkar.app
-              </a>
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">
+                از هر یک از راه‌های زیر با ما در ارتباط باشید:
+              </p>
+              <ul className="space-y-2">
+                {CONTACT_ITEMS.map((c) => {
+                  const Icon = c.icon;
+                  return (
+                    <li key={c.label}>
+                      <a
+                        href={c.href}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        className="flex items-center gap-3 rounded-xl border border-border bg-card px-3 py-2.5 transition-colors hover:bg-accent"
+                      >
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground">
+                          <Icon className="h-4 w-4" aria-hidden />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-sm font-bold text-foreground">{c.label}</span>
+                          <span
+                            className="block truncate text-xs text-muted-foreground"
+                            dir={c.dir}
+                          >
+                            {c.value}
+                          </span>
+                        </span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
           ) : null}
         </DialogContent>

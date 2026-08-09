@@ -39,7 +39,8 @@ function sanitize(raw: unknown): Settings {
   return {
     onboardingCompleted: Boolean(value.onboardingCompleted),
     theme,
-    mode: value.mode === "dark" ? "dark" : "light",
+    mode:
+      value.mode === "dark" ? "dark" : value.mode === "system" ? "system" : "light",
     userGroup: (["A", "B", "C", "D"] as const).includes(value.userGroup as Group)
       ? (value.userGroup as Group)
       : "A",
@@ -59,6 +60,30 @@ function emit() {
   listeners.forEach((l) => l());
 }
 
+let systemListenerBound = false;
+
+function prefersDark(): boolean {
+  if (typeof window === "undefined" || !window.matchMedia) return false;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
+/** Resolve the effective light/dark value, following the OS when mode is "system". */
+export function resolveMode(mode: ThemeMode): "light" | "dark" {
+  if (mode === "system") return prefersDark() ? "dark" : "light";
+  return mode;
+}
+
+function bindSystemListener() {
+  if (systemListenerBound || typeof window === "undefined" || !window.matchMedia) return;
+  systemListenerBound = true;
+  const mql = window.matchMedia("(prefers-color-scheme: dark)");
+  const onChange = () => {
+    if (current.mode === "system") applyTheme(current);
+  };
+  if (mql.addEventListener) mql.addEventListener("change", onChange);
+  else mql.addListener(onChange);
+}
+
 export function loadSettings(): Settings {
   if (typeof window === "undefined") return current;
   if (!hydrated) {
@@ -69,6 +94,7 @@ export function loadSettings(): Settings {
     } catch {
       current = DEFAULT_SETTINGS;
     }
+    bindSystemListener();
     applyTheme(current);
   }
   return current;
@@ -78,7 +104,7 @@ export function applyTheme(s: Settings) {
   if (typeof document === "undefined") return;
   const root = document.documentElement;
   root.setAttribute("data-theme", s.theme);
-  root.classList.toggle("dark", s.mode === "dark");
+  root.classList.toggle("dark", resolveMode(s.mode) === "dark");
 }
 
 export function updateSettings(patch: Partial<Settings>) {

@@ -5,9 +5,16 @@ import { GROUPS, GROUP_LABELS, type Group } from "@/lib/shift";
 import { useSettings } from "@/lib/settings";
 import { THEMES } from "@/lib/themes";
 import { cn } from "@/lib/utils";
-import { CalendarClock, Check, Palette, Users } from "lucide-react";
+import type { ThemeMode } from "@/lib/themes";
+import { CalendarClock, Check, Monitor, Moon, Palette, Sun, Users } from "lucide-react";
 
-const STEPS = ["خوش آمدید", "گروه کاری", "پوسته"] as const;
+const STEPS = ["خوش آمدید", "شیفت کاری", "پوسته"] as const;
+
+const MODE_OPTIONS: { id: ThemeMode; label: string; icon: typeof Sun }[] = [
+  { id: "light", label: "روشن", icon: Sun },
+  { id: "dark", label: "تیره", icon: Moon },
+  { id: "system", label: "سیستم", icon: Monitor },
+];
 
 export function OnboardingPage() {
   const { settings, set } = useSettings();
@@ -52,7 +59,7 @@ export function OnboardingPage() {
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
               <Users className="h-6 w-6" aria-hidden />
             </span>
-            <h1 className="mt-4 text-xl font-extrabold">گروه کاری خود را انتخاب کنید</h1>
+            <h1 className="mt-4 text-xl font-extrabold">شیفت کاری خود را انتخاب کنید</h1>
             <p className="mt-1 text-sm text-muted-foreground">
               این انتخاب، شیفت امروز و فیلتر پیش‌فرض تقویم را تعیین می‌کند.
             </p>
@@ -69,7 +76,7 @@ export function OnboardingPage() {
                       : "border-border bg-card hover:bg-accent",
                   )}
                 >
-                  گروه {GROUP_LABELS[g]}
+                  شیفت {GROUP_LABELS[g]}
                   {settings.userGroup === g ? <Check className="h-4 w-4" aria-hidden /> : null}
                 </button>
               ))}
@@ -86,7 +93,38 @@ export function OnboardingPage() {
             <p className="mt-1 text-sm text-muted-foreground">
               هر زمان می‌توانید از تنظیمات آن را تغییر دهید.
             </p>
-            <div className="mt-5 grid grid-cols-2 gap-3">
+
+            <p className="mt-5 mb-2 text-sm font-bold">حالت نمایش</p>
+            <div className="grid grid-cols-3 gap-2">
+              {MODE_OPTIONS.map((m) => {
+                const Icon = m.icon;
+                return (
+                  <button
+                    key={m.id}
+                    type="button"
+                    onClick={() => set({ mode: m.id })}
+                    aria-pressed={settings.mode === m.id}
+                    className={cn(
+                      "flex flex-col items-center gap-1 rounded-2xl border px-2 py-3 text-xs font-bold transition-colors",
+                      settings.mode === m.id
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border bg-card hover:bg-accent",
+                    )}
+                  >
+                    <Icon className="h-5 w-5" aria-hidden />
+                    {m.label}
+                  </button>
+                );
+              })}
+            </div>
+            {settings.mode === "system" ? (
+              <p className="mt-2 text-xs text-muted-foreground">
+                حالت روشن یا تیره به‌صورت خودکار از تنظیمات دستگاه شما پیروی می‌کند.
+              </p>
+            ) : null}
+
+            <p className="mt-5 mb-2 text-sm font-bold">رنگ پوسته</p>
+            <div className="grid grid-cols-2 gap-3">
               {THEMES.map((t) => (
                 <button
                   key={t.id}

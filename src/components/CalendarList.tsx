@@ -53,7 +53,7 @@ export function CalendarList({
             {PERSIAN_MONTHS[jm - 1]} {toPersianDigits(jy)}
           </p>
           <p className="text-xs opacity-90">
-            {filterGroup === "ALL" ? "همه گروه‌ها" : `گروه ${GROUP_LABELS[filterGroup]}`}
+            {filterGroup === "ALL" ? "همه شیفت‌ها" : `شیفت ${GROUP_LABELS[filterGroup]}`}
           </p>
         </div>
 

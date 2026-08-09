@@ -1,5 +1,5 @@
 export type ThemeId = "blue" | "emerald" | "purple" | "orange" | "rose" | "teal";
-export type ThemeMode = "light" | "dark";
+export type ThemeMode = "light" | "dark" | "system";
 
 export interface ThemeDef {
   id: ThemeId;

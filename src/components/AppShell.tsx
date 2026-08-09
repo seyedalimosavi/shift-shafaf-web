@@ -3,6 +3,7 @@ import { CalendarDays, Grid2X2, Image, Settings as SettingsIcon } from "lucide-r
 import { useEffect, type ReactNode } from "react";
 import { updateSettings } from "@/lib/settings";
 import { cn } from "@/lib/utils";
+import { InstallPrompt } from "@/components/InstallPrompt";
 
 const TABS = [
   { to: "/calendar", label: "تقویم", icon: CalendarDays },
@@ -21,6 +22,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-3xl flex-col bg-background">
       <main className="flex-1 pb-24">{children}</main>
+
+      <InstallPrompt />
 
       <nav
         aria-label="ناوبری اصلی"

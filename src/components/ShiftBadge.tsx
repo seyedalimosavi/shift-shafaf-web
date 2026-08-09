@@ -28,9 +28,9 @@ export function ShiftBadge({
         size === "md" && "px-3 py-1 text-sm",
         className,
       )}
-      title={`${STATUS_LABELS[shift.status]} — ${shift.label}`}
+      title={shift.label}
     >
-      {showCode ? `${STATUS_LABELS[shift.status]} · ${shift.label}` : STATUS_LABELS[shift.status]}
+      {showCode ? shift.label : STATUS_LABELS[shift.status]}
     </span>
   );
 }
@@ -48,7 +48,7 @@ export function GroupShiftChip({
         "flex h-4 min-w-0 flex-1 items-center justify-center rounded-[4px] text-[9px] font-bold leading-none",
         statusClass[shift.status],
       )}
-      title={`گروه ${group}: ${shift.statusLabel}`}
+      title={`شیفت ${group}: ${shift.statusLabel}`}
     >
       {group}
     </span>
