@@ -25,16 +25,16 @@ function jalCal(jy: number): JalCal {
   const bl = breaks.length;
   const gy = jy + 621;
   let leapJ = -14;
-  let jp = breaks[0];
+  let jp = breaks[0]!;
 
-  if (jy < jp || jy >= breaks[bl - 1]) {
+  if (jy < jp || jy >= breaks[bl - 1]!) {
     // Out of the supported range; clamp gracefully instead of throwing.
-    jy = Math.min(Math.max(jy, jp), breaks[bl - 1] - 1);
+    jy = Math.min(Math.max(jy, jp), breaks[bl - 1]! - 1);
   }
 
   let jump = 0;
   for (let i = 1; i < bl; i += 1) {
-    const jm = breaks[i];
+    const jm = breaks[i]!;
     jump = jm - jp;
     if (jy < jm) break;
     leapJ = leapJ + div(jump, 33) * 8 + div(mod(jump, 33), 4);
@@ -179,7 +179,7 @@ export const PERSIAN_WEEKDAYS_SHORT = ["ش", "ی", "د", "س", "چ", "پ", "ج"]
 const PERSIAN_DIGITS = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
 
 export function toPersianDigits(value: string | number): string {
-  return String(value).replace(/[0-9]/g, (d) => PERSIAN_DIGITS[Number(d)]);
+  return String(value).replace(/[0-9]/g, (d) => PERSIAN_DIGITS[Number(d)]!);
 }
 
 export function pad2(n: number): string {
