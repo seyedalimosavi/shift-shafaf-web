@@ -26,17 +26,19 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22 # آپدیت به نسخه ۲۲ برای رفع هشدار Deprecated
+          node-version: 22
 
       - name: Install & Build
         run: |
           npm install
           npm run build
+          # ساخت فایل 404.html جهت جلوگیری از خطای 404 در مسیریابی TanStack Router
+          cp .output/public/index.html .output/public/404.html
 
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist' # تغییر مسیر به پوشه خروجی Vite برای رفع ارور 404
+          path: './.output/public' # مسیر واقعی خروجی Nitro و TanStack
 
       - name: Deploy to GitHub Pages
         id: deployment
