@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as RosterRouteImport } from './routes/roster'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SystemsRouteImport } from './routes/systems'
 
 const IndexRoute = IndexRouteImport.update({
@@ -29,6 +30,11 @@ const RosterRoute = RosterRouteImport.update({
   path: '/roster',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SystemsRoute = SystemsRouteImport.update({
   id: '/systems',
   path: '/systems',
@@ -39,12 +45,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/calendar': typeof CalendarRoute
   '/roster': typeof RosterRoute
+  '/settings': typeof SettingsRoute
   '/systems': typeof SystemsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/calendar': typeof CalendarRoute
   '/roster': typeof RosterRoute
+  '/settings': typeof SettingsRoute
   '/systems': typeof SystemsRoute
 }
 export interface FileRoutesById {
@@ -52,20 +60,22 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/calendar': typeof CalendarRoute
   '/roster': typeof RosterRoute
+  '/settings': typeof SettingsRoute
   '/systems': typeof SystemsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/calendar' | '/roster' | '/systems'
+  fullPaths: '/' | '/calendar' | '/roster' | '/settings' | '/systems'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/calendar' | '/roster' | '/systems'
-  id: '__root__' | '/' | '/calendar' | '/roster' | '/systems'
+  to: '/' | '/calendar' | '/roster' | '/settings' | '/systems'
+  id: '__root__' | '/' | '/calendar' | '/roster' | '/settings' | '/systems'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CalendarRoute: typeof CalendarRoute
   RosterRoute: typeof RosterRoute
+  SettingsRoute: typeof SettingsRoute
   SystemsRoute: typeof SystemsRoute
 }
 
@@ -92,6 +102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RosterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/systems': {
       id: '/systems'
       path: '/systems'
@@ -106,6 +123,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CalendarRoute: CalendarRoute,
   RosterRoute: RosterRoute,
+  SettingsRoute: SettingsRoute,
   SystemsRoute: SystemsRoute,
 }
 export const routeTree = rootRouteImport
