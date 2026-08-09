@@ -7,7 +7,7 @@ export default defineConfig({
     server: { entry: "server" },
   },
   vite: {
-    base: "/shift-shafaf-web/",
+    base: "/",
     plugins: [
       VitePWA({
         strategies: "generateSW",
