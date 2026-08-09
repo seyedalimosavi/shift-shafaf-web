@@ -76,7 +76,7 @@ export function CalendarPage() {
           <div className="flex overflow-hidden rounded-full border border-border">
             <button
               type="button"
-              aria-label="نمای شبکه‌ای"
+              aria-label="نمای تقویم"
               aria-pressed={settings.calendarView === "GRID"}
               onClick={() => set({ calendarView: "GRID" })}
               className={cn(
