@@ -29,9 +29,12 @@ export function TodayShiftCard({
         </div>
       </div>
 
-      <ul className="mt-2 flex items-center gap-1.5">
+      <ul className="mt-2 grid grid-cols-4 gap-1.5">
         {GROUPS.map((g) => (
-          <li key={g} className="flex flex-1 items-center gap-1 rounded-lg bg-card/85 px-1.5 py-1">
+          <li
+            key={g}
+            className="flex min-w-0 flex-col items-center gap-1 rounded-lg bg-card/85 px-1 py-1"
+          >
             <span className="text-[10px] font-bold text-card-foreground">شیفت {GROUP_LABELS[g]}</span>
             <GroupShiftChip group={all[g].label} shift={all[g]} />
           </li>
