@@ -78,7 +78,11 @@ export function CalendarList({
                   <span
                     className={cn(
                       "w-8 shrink-0 text-base font-bold",
-                      holiday.isHoliday ? "text-holiday" : "text-foreground",
+                      holiday.title
+                        ? "text-official"
+                        : holiday.isFriday
+                          ? "text-holiday"
+                          : "text-foreground",
                     )}
                   >
                     {toPersianDigits(d.jd)}

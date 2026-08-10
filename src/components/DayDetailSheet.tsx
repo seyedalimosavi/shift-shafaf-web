@@ -60,7 +60,7 @@ export function DayDetailSheet({
         <div className="space-y-4 px-4 pb-6">
           {holiday.isHoliday ? (
             <p className="rounded-xl bg-accent px-3 py-2 text-sm font-medium text-holiday">
-              {holiday.title ?? "تعطیل رسمی (جمعه)"}
+              {holiday.title ?? "تعطیل (جمعه)"}
             </p>
           ) : null}
 
