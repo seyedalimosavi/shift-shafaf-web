@@ -19,10 +19,10 @@ export const GROUP_OFFSETS: Record<Group, number> = { A: 7, B: 1, C: 5, D: 3 };
 export const DEFAULT_BASE_DATE: JalaliDate = { jy: 1405, jm: 5, jd: 4 };
 
 export const GROUP_LABELS: Record<Group, string> = {
-  A: "الف",
-  B: "ب",
-  C: "ج",
-  D: "د",
+  A: "A",
+  B: "B",
+  C: "C",
+  D: "D",
 };
 
 export const FILTER_GROUP_LABELS: Record<FilterGroup, string> = {
@@ -31,10 +31,10 @@ export const FILTER_GROUP_LABELS: Record<FilterGroup, string> = {
 };
 
 export const SHIFT_CODE_LABELS: Record<ShiftCode, string> = {
-  M1: "صبح ۱",
-  M2: "صبح ۲",
-  N1: "شب ۱",
-  N2: "شب ۲",
+  M1: "روزکار ۱",
+  M2: "روزکار ۲",
+  N1: "شب‌کار ۱",
+  N2: "شب‌کار ۲",
   R1: "استراحت ۱",
   R2: "استراحت ۲",
   R3: "استراحت ۳",
@@ -42,8 +42,8 @@ export const SHIFT_CODE_LABELS: Record<ShiftCode, string> = {
 };
 
 export const STATUS_LABELS: Record<ShiftStatus, string> = {
-  DAY: "روز",
-  NIGHT: "شب",
+  DAY: "روزکار",
+  NIGHT: "شب‌کار",
   REST: "استراحت",
 };
 
