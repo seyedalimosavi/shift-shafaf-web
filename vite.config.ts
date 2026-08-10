@@ -18,7 +18,7 @@ export default defineConfig({
         manifest: false,
         workbox: {
           globPatterns: ["**/*.{js,css,html,svg,png,ico,woff2}"],
-          navigateFallback: "/shift-shafaf-web/",
+          navigateFallback: "/",
           navigateFallbackDenylist: [/^\/~oauth/, /^\/api\//],
           runtimeCaching: [
             {

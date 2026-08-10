@@ -9,10 +9,28 @@ import { THEMES } from "@/lib/themes";
 import { formatJalaliLong, todayJalali } from "@/lib/jalali";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { Info, LifeBuoy, Mail, Moon, RefreshCcw, Sun } from "lucide-react";
+import { Info, LifeBuoy, Mail, MessageCircle, Moon, Phone, RefreshCcw, Send, Sun, SunMoon, Users } from "lucide-react";
 import { ShiftBadge } from "@/components/ShiftBadge";
 
 type DialogKind = "help" | "about" | "contact" | null;
+
+const CONTACTS = [
+  { label: "شماره تماس", value: "09120000000", href: "tel:+989120000000", Icon: Phone },
+  {
+    label: "گروه واتساپ",
+    value: "WhatsApp Group",
+    href: "https://chat.whatsapp.com/",
+    Icon: Users,
+  },
+  {
+    label: "واتساپ شخصی",
+    value: "WhatsApp",
+    href: "https://wa.me/989120000000",
+    Icon: MessageCircle,
+  },
+  { label: "کانال ایتا", value: "Eitaa", href: "https://eitaa.com/shiftkar", Icon: Send },
+  { label: "تلگرام شخصی", value: "Telegram", href: "https://t.me/shiftkar", Icon: Send },
+] as const;
 
 export function SettingsPage() {
   const { settings, set } = useSettings();
@@ -23,13 +41,13 @@ export function SettingsPage() {
 
   return (
     <AppShell>
-      <PageHeader title="تنظیمات" subtitle="گروه کاری، نمایش تقویم و پوسته" />
+      <PageHeader title="تنظیمات" subtitle="شیفت کاری، نمایش تقویم و پوسته" />
 
       <div className="space-y-4 px-4 py-4">
         <section className="rounded-2xl border border-border bg-card p-4 elevated">
-          <h2 className="text-sm font-bold">گروه کاری من</h2>
+          <h2 className="text-sm font-bold">شیفت کاری من</h2>
           <p className="mt-1 text-xs text-muted-foreground">
-            انتخاب گروه، فیلتر تقویم را نیز به همان گروه تغییر می‌دهد.
+            انتخاب شیفت، فیلتر تقویم را نیز به همان شیفت تغییر می‌دهد.
           </p>
           <div className="mt-3 grid grid-cols-4 gap-2">
             {GROUPS.map((g: Group) => (
@@ -38,7 +56,7 @@ export function SettingsPage() {
                 type="button"
                 onClick={() => {
                   set({ userGroup: g, filterGroup: g });
-                  toast.success(`گروه کاری روی «${GROUP_LABELS[g]}» تنظیم شد.`);
+                  toast.success(`شیفت کاری روی «${GROUP_LABELS[g]}» تنظیم شد.`);
                 }}
                 className={cn(
                   "rounded-xl border px-2 py-3 text-sm font-bold transition-colors",
@@ -47,7 +65,7 @@ export function SettingsPage() {
                     : "border-border bg-card hover:bg-accent",
                 )}
               >
-                {GROUP_LABELS[g]}
+                شیفت {GROUP_LABELS[g]}
               </button>
             ))}
           </div>
@@ -79,20 +97,30 @@ export function SettingsPage() {
         </section>
 
         <section className="rounded-2xl border border-border bg-card p-4 elevated">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold">پوستهٔ رنگی</h2>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => set({ mode: settings.mode === "dark" ? "light" : "dark" })}
-            >
-              {settings.mode === "dark" ? (
-                <Sun className="h-4 w-4" aria-hidden />
-              ) : (
-                <Moon className="h-4 w-4" aria-hidden />
-              )}
-              {settings.mode === "dark" ? "حالت روشن" : "حالت تیره"}
-            </Button>
+          <h2 className="text-sm font-bold">پوستهٔ رنگی</h2>
+
+          <div className="mt-3 grid grid-cols-3 gap-2">
+            {([
+              { id: "light", label: "روشن", Icon: Sun },
+              { id: "dark", label: "تیره", Icon: Moon },
+              { id: "system", label: "پیروی از سیستم", Icon: SunMoon },
+            ] as const).map(({ id, label, Icon }) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => set({ mode: id })}
+                aria-pressed={settings.mode === id}
+                className={cn(
+                  "flex flex-col items-center gap-1 rounded-xl border px-2 py-3 text-xs font-bold transition-colors",
+                  settings.mode === id
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-card hover:bg-accent",
+                )}
+              >
+                <Icon className="h-4 w-4" aria-hidden />
+                {label}
+              </button>
+            ))}
           </div>
 
           <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -184,15 +212,15 @@ export function SettingsPage() {
           </DialogHeader>
           {dialog === "help" ? (
             <div className="space-y-2 text-sm text-muted-foreground">
-              <p>• چرخهٔ شیفت ۸ روزه است: صبح ۱، صبح ۲، شب ۱، شب ۲ و چهار روز استراحت.</p>
+              <p>• چرخهٔ شیفت ۸ روزه است: روزکار ۱، روزکار ۲، شب‌کار ۱، شب‌کار ۲ و استراحت ۱ تا ۴.</p>
               <p>• با کشیدن افقی روی تقویم، ماه بعد یا قبل نمایش داده می‌شود.</p>
               <p>• با لمس هر روز، جزئیات روز و یادداشت آن باز می‌شود.</p>
-              <p>• فیلتر گروه، شیفت همان گروه را روی تقویم نشان می‌دهد.</p>
+              <p>• فیلتر شیفت، برنامهٔ همان شیفت را روی تقویم نشان می‌دهد.</p>
             </div>
           ) : null}
           {dialog === "about" ? (
             <div className="space-y-2 text-sm text-muted-foreground">
-              <p>«شیفت‌کار» تقویم شیفت شمسی با چرخهٔ ۸ روزه و گروه‌های الف، ب، ج و د است.</p>
+              <p>«شیفت‌کار» تقویم شیفت شمسی با چرخهٔ ۸ روزه و شیفت‌های A، B، C و D است.</p>
               <p>
                 مبدأ محاسبه: {formatJalaliLong(baseDate)} — همهٔ داده‌ها فقط روی همین دستگاه ذخیره
                 می‌شود و برنامه به‌صورت آفلاین کار می‌کند.
@@ -200,12 +228,24 @@ export function SettingsPage() {
             </div>
           ) : null}
           {dialog === "contact" ? (
-            <div className="space-y-2 text-sm text-muted-foreground">
-              <p>برای ارسال بازخورد یا گزارش خطا با ما در تماس باشید:</p>
-              <a className="block font-bold text-primary" href="mailto:support@shiftkar.app" dir="ltr">
-                support@shiftkar.app
-              </a>
-            </div>
+            <ul className="space-y-2 text-sm">
+              {CONTACTS.map((c) => (
+                <li key={c.label}>
+                  <a
+                    href={c.href}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="flex items-center gap-3 rounded-xl border border-border px-3 py-2 hover:bg-accent"
+                  >
+                    <c.Icon className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+                    <span className="flex-1 font-bold">{c.label}</span>
+                    <span className="text-xs text-muted-foreground" dir="ltr">
+                      {c.value}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
           ) : null}
         </DialogContent>
       </Dialog>

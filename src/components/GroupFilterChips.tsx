@@ -9,7 +9,7 @@ export function GroupFilterChips({
   onChange: (g: FilterGroup) => void;
 }) {
   return (
-    <div className="no-scrollbar flex gap-2 overflow-x-auto px-4 py-2" role="tablist" aria-label="فیلتر گروه">
+    <div className="no-scrollbar flex gap-2 overflow-x-auto px-4 py-2" role="tablist" aria-label="فیلتر شیفت">
       {FILTER_GROUPS.map((g) => {
         const active = g === value;
         return (
@@ -26,7 +26,7 @@ export function GroupFilterChips({
                 : "border-border bg-card text-muted-foreground hover:bg-accent hover:text-accent-foreground",
             )}
           >
-            {g === "ALL" ? FILTER_GROUP_LABELS.ALL : `گروه ${FILTER_GROUP_LABELS[g]}`}
+            {g === "ALL" ? FILTER_GROUP_LABELS.ALL : `شیفت ${FILTER_GROUP_LABELS[g]}`}
           </button>
         );
       })}

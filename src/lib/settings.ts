@@ -21,7 +21,7 @@ const STORAGE_KEY = "shiftkar.settings.v1";
 export const DEFAULT_SETTINGS: Settings = {
   onboardingCompleted: false,
   theme: "blue",
-  mode: "light",
+  mode: "system",
   userGroup: "A",
   filterGroup: "ALL",
   calendarView: "GRID",
@@ -39,7 +39,7 @@ function sanitize(raw: unknown): Settings {
   return {
     onboardingCompleted: Boolean(value.onboardingCompleted),
     theme,
-    mode: value.mode === "dark" ? "dark" : "light",
+    mode: value.mode === "dark" || value.mode === "light" ? value.mode : "system",
     userGroup: (["A", "B", "C", "D"] as const).includes(value.userGroup as Group)
       ? (value.userGroup as Group)
       : "A",
@@ -74,11 +74,32 @@ export function loadSettings(): Settings {
   return current;
 }
 
+function prefersDark(): boolean {
+  if (typeof window === "undefined" || !window.matchMedia) return false;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
+export function resolveMode(mode: ThemeMode): "light" | "dark" {
+  return mode === "system" ? (prefersDark() ? "dark" : "light") : mode;
+}
+
+let systemListenerAttached = false;
+
 export function applyTheme(s: Settings) {
   if (typeof document === "undefined") return;
   const root = document.documentElement;
   root.setAttribute("data-theme", s.theme);
-  root.classList.toggle("dark", s.mode === "dark");
+  root.classList.toggle("dark", resolveMode(s.mode) === "dark");
+
+  if (!systemListenerAttached && typeof window !== "undefined" && window.matchMedia) {
+    systemListenerAttached = true;
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+      if (current.mode === "system") {
+        document.documentElement.classList.toggle("dark", prefersDark());
+        emit();
+      }
+    });
+  }
 }
 
 export function updateSettings(patch: Partial<Settings>) {

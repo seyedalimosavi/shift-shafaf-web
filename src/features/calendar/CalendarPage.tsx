@@ -18,7 +18,7 @@ import {
 } from "@/lib/jalali";
 import { baseDateOf, useSettings } from "@/lib/settings";
 import { useNotes } from "@/hooks/useNotes";
-import { ChevronLeft, ChevronRight, LayoutGrid, List, NotebookPen } from "lucide-react";
+import { CalendarCheck, ChevronLeft, ChevronRight, LayoutGrid, List, NotebookPen } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function CalendarPage() {
@@ -42,6 +42,7 @@ export function CalendarPage() {
 
   const touchStart = useRef<{ x: number; y: number } | null>(null);
   const shiftMonth = (delta: number) => setCursor((c) => addMonths(c.jy, c.jm, delta));
+  const isTodayMonth = cursor.jy === today.jy && cursor.jm === today.jm;
 
   return (
     <AppShell>
@@ -65,6 +66,20 @@ export function CalendarPage() {
         </div>
 
         <div className="flex items-center gap-1">
+          {!isTodayMonth ? (
+            <Button
+              variant="secondary"
+              size="sm"
+              className="rounded-full"
+              onClick={() => {
+                setCursor({ jy: today.jy, jm: today.jm });
+                setSelected(today);
+              }}
+            >
+              <CalendarCheck className="h-4 w-4" aria-hidden />
+              برو به امروز
+            </Button>
+          ) : null}
           <Button
             variant="ghost"
             size="icon"

@@ -74,7 +74,11 @@ export function CalendarGrid({
                 <span
                   className={cn(
                     "text-sm font-bold",
-                    holiday.isHoliday ? "text-holiday" : "text-foreground",
+                    holiday.title
+                      ? "text-official"
+                      : holiday.isFriday
+                        ? "text-holiday"
+                        : "text-foreground",
                   )}
                 >
                   {toPersianDigits(cell.jd)}

@@ -60,19 +60,19 @@ export function DayDetailSheet({
         <div className="space-y-4 px-4 pb-6">
           {holiday.isHoliday ? (
             <p className="rounded-xl bg-accent px-3 py-2 text-sm font-medium text-holiday">
-              {holiday.title ?? "تعطیل رسمی (جمعه)"}
+              {holiday.title ?? "تعطیل (جمعه)"}
             </p>
           ) : null}
 
           <div>
-            <h3 className="mb-2 text-sm font-bold">وضعیت گروه‌ها</h3>
+            <h3 className="mb-2 text-sm font-bold">وضعیت شیفت‌ها</h3>
             <ul className="grid grid-cols-2 gap-2">
               {GROUPS.map((g) => (
                 <li
                   key={g}
                   className="flex items-center justify-between rounded-xl border border-border bg-card px-3 py-2"
                 >
-                  <span className="text-sm font-medium">گروه {GROUP_LABELS[g]}</span>
+                  <span className="text-sm font-medium">شیفت {GROUP_LABELS[g]}</span>
                   <ShiftBadge shift={all[g]} size="sm" showCode />
                 </li>
               ))}
