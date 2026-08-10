@@ -1,6 +1,6 @@
 import { formatJalaliLong, getHoliday, jalaaliWeekDay, PERSIAN_WEEKDAYS, type JalaliDate } from "@/lib/jalali";
 import { getAllShifts, GROUPS, GROUP_LABELS, type Group } from "@/lib/shift";
-import { ShiftBadge } from "./ShiftBadge";
+import { GroupShiftChip } from "./ShiftBadge";
 
 export function TodayShiftCard({
   today,
@@ -16,30 +16,24 @@ export function TodayShiftCard({
   const holiday = getHoliday(today);
 
   return (
-    <section className="hero-gradient px-4 pb-5 pt-6 text-primary-foreground">
-      <p className="text-xs opacity-90">شیفت امروز شما</p>
-      <div className="mt-1 flex items-end justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-extrabold leading-tight">{mine.statusLabel}</h1>
-          <p className="mt-1 text-sm opacity-90">
-            گروه {GROUP_LABELS[userGroup]} — {mine.label}
-          </p>
+    <section className="hero-gradient px-4 py-3 text-primary-foreground">
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-[11px] opacity-90">شیفت {GROUP_LABELS[userGroup]} — امروز</p>
+          <h1 className="truncate text-lg font-extrabold leading-tight">{mine.label}</h1>
         </div>
-        <div className="text-left text-sm opacity-95">
+        <div className="shrink-0 text-left text-[11px] leading-tight opacity-95">
           <p className="font-bold">{PERSIAN_WEEKDAYS[jalaaliWeekDay(today)]}</p>
           <p>{formatJalaliLong(today)}</p>
-          {holiday.isHoliday ? <p className="mt-1 text-xs">{holiday.title ?? "تعطیل رسمی"}</p> : null}
+          {holiday.title ? <p className="truncate">{holiday.title}</p> : null}
         </div>
       </div>
 
-      <ul className="mt-4 grid grid-cols-4 gap-2">
+      <ul className="mt-2 flex items-center gap-1.5">
         {GROUPS.map((g) => (
-          <li
-            key={g}
-            className="flex flex-col items-center gap-1 rounded-xl bg-card/85 py-2 text-card-foreground"
-          >
-            <span className="text-xs font-bold">گروه {GROUP_LABELS[g]}</span>
-            <ShiftBadge shift={all[g]} size="xs" />
+          <li key={g} className="flex flex-1 items-center gap-1 rounded-lg bg-card/85 px-1.5 py-1">
+            <span className="text-[10px] font-bold text-card-foreground">شیفت {GROUP_LABELS[g]}</span>
+            <GroupShiftChip group={all[g].label} shift={all[g]} />
           </li>
         ))}
       </ul>
